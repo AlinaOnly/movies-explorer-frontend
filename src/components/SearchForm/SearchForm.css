@@ -159,6 +159,7 @@
     .search__input {
         font-size: 14px;
         margin-left: 19px;
+        margin-right: 19px;
     }
 
     .search__container-checkbox {

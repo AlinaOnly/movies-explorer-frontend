@@ -19,43 +19,43 @@ function App() {
 
     return (
         <>
-        <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
-            <Routes>
-                <Route 
-                    path='/signin' 
-                    element={
-                        <Login />} />
-                <Route 
-                    path='/signup' 
-                    element={
-                        <Register />} />
-                <Route 
-                    path='/profile' 
-                    element={
-                        <Profile 
-                            handleBurgerMenu={handleBurgerMenu}
-                        />} />
-                <Route 
-                    path='/movies' 
-                    element={
-                        <Movies 
-                            handleBurgerMenu={handleBurgerMenu}   
-                        />} />
-                <Route 
-                    path='/saved-movies' 
-                    element={
-                        <SavedMovies 
-                            handleBurgerMenu={handleBurgerMenu}
-                        />} />
-                <Route 
-                    path='/' 
-                    element={
-                        <Main />} />
-                <Route 
-                    path='*' 
-                    element={
-                        <NotFound />} />
-            </Routes>
+            <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
+                <Routes>
+                    <Route 
+                        path='/signin' 
+                        element={
+                            <Login />} />
+                    <Route 
+                        path='/signup' 
+                        element={
+                            <Register />} />
+                    <Route 
+                        path='/profile' 
+                        element={
+                            <Profile 
+                                handleBurgerMenu={handleBurgerMenu}
+                            />} />
+                    <Route 
+                        path='/movies' 
+                        element={
+                            <Movies 
+                                handleBurgerMenu={handleBurgerMenu}   
+                            />} />
+                    <Route 
+                        path='/saved-movies' 
+                        element={
+                            <SavedMovies 
+                                handleBurgerMenu={handleBurgerMenu}
+                            />} />
+                    <Route 
+                        path='/' 
+                        element={
+                            <Main />} />
+                    <Route 
+                        path='*' 
+                        element={
+                            <NotFound />} />
+                </Routes>
         </>
     );
 }

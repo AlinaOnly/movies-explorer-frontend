@@ -110,9 +110,11 @@ function Movies({handleBurgerMenu}) {
         <>
             <Menu 
                 handleBurgerMenu={handleBurgerMenu}/>
-            <SearchForm />
-            <MoviesCardList movies={isMovies} /> 
-            <More />
+            <div className="main">
+                <SearchForm />
+                <MoviesCardList movies={isMovies} /> 
+                <More />
+            </div>
             <Footer/>
         </>
     );
