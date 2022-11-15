@@ -1,8 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './BurgerMenu.css';
 
 function BurgerMenu({ isBurger, handleBurgerMenu }) {
+    const location = useLocation();
+    const moviesLocation = location.pathname === '/movies';
+    const savedMoviesLocation = location.pathname === '/saved-movies';
+    const mainLocation = location.pathname === '/';
+
     return (
         <section className={isBurger ? `burger-menu burger-menu_open` : 'burger-menu'}>
             <div className="burger-menu__container">
@@ -17,7 +22,7 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                         <Link 
                             onClick={handleBurgerMenu}
                             to="/" 
-                            className="burger-menu__link app__text-opacity">
+                            className={(`burger-menu__link app__text-opacity ${mainLocation ? "burger-menu__link_active" : ""}`)}>
                             Главная
                         </Link>
                     </li>
@@ -25,7 +30,7 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                         <Link 
                             onClick={handleBurgerMenu}
                             to="/movies" 
-                            className="burger-menu__link burger-menu__link_active app__text-opacity">
+                            className={(`burger-menu__link app__text-opacity ${moviesLocation ? "burger-menu__link_active" : ""}`)}>
                             Фильмы
                         </Link>
                     </li>
@@ -33,7 +38,7 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                         <Link 
                             onClick={handleBurgerMenu}
                             to="/saved-movies" 
-                            className="burger-menu__link app__text-opacity">
+                            className={(`burger-menu__link app__text-opacity ${savedMoviesLocation ? "burger-menu__link_active" : ""}`)}>
                             Сохраненные фильмы
                         </Link>
                     </li>

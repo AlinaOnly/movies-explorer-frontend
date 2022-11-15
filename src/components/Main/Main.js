@@ -6,11 +6,12 @@ import Techs from '../Techs/Techs';
 import AboutMe from '../AboutMe/AboutMe';
 import Portfolio from '../Portfolio/Portfolio';
 import Footer from '../Footer/Footer';
+import Menu from '../Menu/Menu';
 
-function Main() {
+function Main({ logIn, handleBurgerMenu }) {
     return (
         <>
-            <Header />
+            {logIn ? (<Menu handleBurgerMenu={handleBurgerMenu}/>) : (<Header />)}
             <div className="main">
                 <Promo />
                 <AboutProject />

@@ -1,3 +1,3 @@
 .saved-movies {
-    margin-bottom: 140px;
+    min-height: calc(82vh - 80px);
 }

@@ -1,6 +1,12 @@
-# movies-explorer-frontend
+## movies-explorer-frontend
 
-Frontend - вторая часть дипломного проекта на курсах по Веб-Разработке от Яндекс.Практикума
-Публичный IP 51.250.67.205
+* Movies Frontend -  последняя часть дипломного проекта на курсах по Веб-Разработке от Яндекс.Практикума.
+Добавлена функциональность на «React» и JS.
 
-Макет для проверки дипломного проекта: https://disk.yandex.ru/d/mYy8fyhX2XS5-g
+Публичный IP: 51.250.67.205
+
+* Домен Frontend: https://trenikovamovies.nomoredomains.icu
+
+* Макет для проверки дипломного проекта: https://disk.yandex.ru/d/mYy8fyhX2XS5-g.
+
+* Ссылка для проверки level-3: 

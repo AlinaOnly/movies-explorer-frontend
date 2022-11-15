@@ -1,4 +1,6 @@
-
+.movies {
+    min-height: calc(82vh - 80px);
+}
 
 .movies__button {
     width: 320px;
