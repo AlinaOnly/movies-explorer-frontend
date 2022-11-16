@@ -47,11 +47,11 @@ function App() {
         apiAuth.registration({ name, email, password })
             .then((res) => {
                 if (res) {
-                    setCurrentUser(name, email);
-                    setLogIn(true);
-                    localStorage.setItem('jwt', res.token);
-                    handleTokenCheck();
-                    navigate('/movies');
+                    handleLogin(email, password);
+                    setCurrentUser(res);
+                    //localStorage.setItem('jwt', res.token);
+                    //handleTokenCheck();
+                   //navigate('/movies');
                     setPreloader(false);
                 }
             }).catch(err => {
