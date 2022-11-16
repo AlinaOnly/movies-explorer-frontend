@@ -55,7 +55,7 @@ class Api {
                 trailerLink: movie.trailerLink,
                 owner: movie.owner,
                 thumbnail: `${apiUrl}${movie.image.formats.thumbnail.url}`,
-                nameRU: movie.nameRU || 'Not Available', 
+                nameRU: movie.nameRU || 'Not Available',
                 nameEN: movie.nameEN || 'Not Available',
                 movieId: movie.id
             }),

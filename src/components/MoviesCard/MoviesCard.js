@@ -11,7 +11,6 @@ function MoviesCard({
     savedMoviesLocation
 }) {
 
-
     const [deleteButtonHidden, setButtonHidden] = useState(true);
     const isSave = savedMovies.some((i) => i.movieId === movie.id);
     const isDelete = savedMovies.filter((i) => i.movieId === movie.id);

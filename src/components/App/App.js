@@ -46,13 +46,14 @@ function App() {
         setPreloader(true);
         apiAuth.registration({ name, email, password })
             .then((res) => {
-               // if (res) {
-                    handleLogin(email, password);
+                if (res.token) {
                     setCurrentUser(name, email);
+                    localStorage.setItem('jwt', res.token);
                     handleTokenCheck();
-                    navigate('/movies');
+                    setLogIn(true);
                     setPreloader(false);
-               // }
+                    navigate('/movies');
+                }
             }).catch(err => {
                 if (err === 'Ошибка: 409') {
                     setErrorMessage(CONFLICT_REG);
@@ -70,13 +71,13 @@ function App() {
         setPreloader(true);
         apiAuth.login({ email, password })
             .then((res) =>{
-                //if(res) {
+                if(res.token) {
+                    setLogIn(true);
                     localStorage.setItem('jwt', res.token);
                     handleTokenCheck();
-                    setLogIn(true);
-                    navigate('/movies');
                     setPreloader(false);
-                //}
+                    navigate('/movies');
+                }
             }).catch(err => {
                 if (err === 'Ошибка: 401') {
                     setErrorMessage(WRONG_PASS);
@@ -93,14 +94,14 @@ function App() {
     function handleLogout() {
         setPreloader(true);
         apiAuth.logout().then((res) => {
-           // if(res) {
+            if(res) {
                 localStorage.removeItem('jwt', res.token);
                 localStorage.clear();
                 setErrorMessage('');
                 setLogIn(false);
-                navigate('/');
                 setPreloader(false);
-            //}
+                navigate('/');
+            }
         }).catch(err => {
             setPreloader(false);
             console.log(err);
@@ -117,7 +118,6 @@ function App() {
                     if(res) {
                         setCurrentUser(res);
                         setLogIn(true);
-                        //navigate(location)
                     }
                 }).catch(err =>
                     console.log(err));
@@ -199,7 +199,6 @@ function App() {
             localStorage.setItem('newMovies', JSON.stringify([ ...savedMovies, movie].reverse()));
             handleTokenCheck();
             setPreloader(false);
-            console.log(movie)
         }).catch(err => {
             setPreloader(false);
             console.log(err);
@@ -216,10 +215,9 @@ function App() {
             setSavedMovies(updatedMovies);
             localStorage.setItem('newMovies', JSON.stringify(updatedMovies));
             setPreloader(false);
-            console.log(movieId);
         }).catch(err => {
             setPreloader(false);
-            console.log(err, movieId);
+            console.log(err);
         });
     }
     //end
@@ -252,6 +250,7 @@ function App() {
                         element=
                         {<ProtectedRoute path='/profile' logIn={logIn} >
                             <Profile 
+                                logIn={logIn}
                                 handleBurgerMenu={handleBurgerMenu}
                                 onUpdateProfile={handleUpdateProfile}
                                 onLogOut={handleLogout}
@@ -264,6 +263,7 @@ function App() {
                         element=
                         {<ProtectedRoute path='/movies' logIn={logIn}>
                             <Movies
+                                logIn={logIn}
                                 handleBurgerMenu={handleBurgerMenu}
                                 isPreloader={isPreloader}
                                 moviesItems={moviesItems}

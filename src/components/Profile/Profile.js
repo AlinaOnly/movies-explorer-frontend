@@ -11,7 +11,7 @@ function Profile({ handleBurgerMenu, onUpdateProfile, onLogOut, errorMessage }) 
     const [isDisableInput, setDisableInput] = useState(true);
     const { values, isValid, errors, handleChange, setValues } = useFormValidation();
 
-    useEffect(() => { 
+    useEffect(() => {
         setValues({
             name: currentUser.name,
             email: currentUser.email});

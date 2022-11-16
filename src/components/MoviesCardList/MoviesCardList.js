@@ -7,7 +7,7 @@ import './MoviesCardList.css';
 
 function MovieCardList({ 
     movies,
-    savedMovies = [],
+    savedMovies,
     onDeleteMovie,
     onMovieSave,
     moviesFound,

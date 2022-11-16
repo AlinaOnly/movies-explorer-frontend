@@ -8,13 +8,12 @@ import './SavedMovies.css';
 
 import { filterMovie } from '../../utils/movieFilter';
 
-function SavedMovies({ 
+function SavedMovies({
     handleBurgerMenu,
-    movies,
     savedMovies,
     onDeleteMovie,
     savedMoviesLocation,
-    isPreloader
+    isPreloader,
 }) {
 
         const [isSearch, setSearch] = useState(
@@ -38,7 +37,7 @@ function SavedMovies({
                 />
                 {isPreloader && <Preloader/>}
                 <MovieCardList 
-                    movies={isSearch || movies}
+                    movies={savedMovies}
                     moviesFound={moviesFound} 
                     savedMovies={savedMovies}
                     onDeleteMovie={onDeleteMovie}
