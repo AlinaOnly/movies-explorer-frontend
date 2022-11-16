@@ -46,13 +46,13 @@ function App() {
         setPreloader(true);
         apiAuth.registration({ name, email, password })
             .then((res) => {
-                if (res.token) {
+                if (res) {
                     setCurrentUser(name, email);
+                    setLogIn(true);
                     localStorage.setItem('jwt', res.token);
                     handleTokenCheck();
-                    setLogIn(true);
-                    setPreloader(false);
                     navigate('/movies');
+                    setPreloader(false);
                 }
             }).catch(err => {
                 if (err === 'Ошибка: 409') {
@@ -71,12 +71,12 @@ function App() {
         setPreloader(true);
         apiAuth.login({ email, password })
             .then((res) =>{
-                if(res.token) {
+                if(res) {
                     setLogIn(true);
                     localStorage.setItem('jwt', res.token);
                     handleTokenCheck();
-                    setPreloader(false);
                     navigate('/movies');
+                    setPreloader(false);
                 }
             }).catch(err => {
                 if (err === 'Ошибка: 401') {
@@ -99,8 +99,8 @@ function App() {
                 localStorage.clear();
                 setErrorMessage('');
                 setLogIn(false);
-                setPreloader(false);
                 navigate('/');
+                setPreloader(false);
             }
         }).catch(err => {
             setPreloader(false);
