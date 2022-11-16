@@ -9,4 +9,4 @@
 
 * Макет для проверки дипломного проекта: https://disk.yandex.ru/d/mYy8fyhX2XS5-g.
 
-* Ссылка для проверки level-3: 
+* Ссылка для проверки level-3: https://github.com/AlinaOnly/movies-explorer-frontend/pull/2
