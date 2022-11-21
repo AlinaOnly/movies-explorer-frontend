@@ -1,29 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import sherlock from '../../images/sherlock.svg';
 import './SearchForm.css';
 
 function SearchForm({ handleSearchButton, moviesLocation }) {
     const [shortMovie, setShortMovie] = useState(
-        (localStorage.getItem('shortMovie')) ? (JSON.parse(localStorage.getItem('shortMovie'))) : false);
-    const [searchReq, setSearchReq] = useState('');
-    const [saveShortMovie, setSaveShortMovie] = useState(false);
+        localStorage.getItem('shortMovie') ? JSON.parse(localStorage.getItem('shortMovie')) : false);
+    const [searchReq, setSearchReq] = useState(moviesLocation ? localStorage.getItem('allMovieSearch') : '');
+    const [saveShortMovie, setSaveShortMovie] = useState(JSON.parse(localStorage.getItem('saveShortMovie')));
+    const [isEmptyInput, setIsEmptyInput] = useState('');
+
+    useEffect(() => {
+        setShortMovie(JSON.parse(localStorage.getItem("shortMovie")));
+        setSaveShortMovie(false);
+    }, []);
 
     function handleSubmit(event)  {
         event.preventDefault();
+        if(!searchReq) {
+            setIsEmptyInput('Введите букву');
+        } else {
             if (moviesLocation) {
+                if (localStorage.getItem('allMovieSearch') !== searchReq){
+                    localStorage.setItem('allMovieSearch', searchReq);
+                    setSearchReq(searchReq);
+                }
                 handleSearchButton(searchReq, shortMovie);
+                localStorage.setItem('shortMovie', shortMovie);
             } else {
-                handleSearchButton(searchReq, saveShortMovie)
+                if (localStorage.getItem('newMoviesSearch') !== searchReq){
+                    localStorage.setItem('newMoviesSearch', searchReq);
+                    setSearchReq('');
+                }
+            handleSearchButton(searchReq, saveShortMovie);
+            localStorage.setItem('saveShortMovie', false);
+            setSaveShortMovie(false);
+            localStorage.setItem('newMoviesSearch', '');
             }
+        }
     }
 
     function toggleCheck () {
         if (shortMovie) {
             setShortMovie(false);
             handleSearchButton(searchReq, false);
+            localStorage.setItem('shortMovie', shortMovie);
         } else {
             setShortMovie(true);
             handleSearchButton(searchReq, true);
+            localStorage.setItem('shortMovie', shortMovie);
         }
     }
 
@@ -31,14 +55,17 @@ function SearchForm({ handleSearchButton, moviesLocation }) {
         if (saveShortMovie) {
             setSaveShortMovie(false);
             handleSearchButton(searchReq, false);
+            localStorage.setItem('saveShortMovie', saveShortMovie);
         } else {
             setSaveShortMovie(true);
             handleSearchButton(searchReq, true);
+            localStorage.setItem('saveShortMovie', saveShortMovie);
         }
     }
 
     function handleSearch (event)  {
         setSearchReq(event.target.value);
+        setIsEmptyInput('');
     }
 
     return (
@@ -51,8 +78,8 @@ function SearchForm({ handleSearchButton, moviesLocation }) {
                         className="search__input"
                         type="text"
                         name="search"
-                        placeholder="Фильм"
-                        value={searchReq || ''}
+                        placeholder={isEmptyInput ? isEmptyInput: "Фильм" }
+                        value={searchReq}
                         required
                     />
                     <button 

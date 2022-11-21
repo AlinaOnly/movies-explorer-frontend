@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate, useLocation } from  'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, useLocation, useNavigate, Navigate } from  'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute';
 import Login from '../Login/Login';
@@ -41,17 +41,20 @@ function App() {
     const [moviesItems, setMoviesItems] = useState([]);
     const [savedMovies, setSavedMovies] = useState([]);
 
+    // JWT
+    let logInJwt = false;
+
     // functionality -- registration
     function handleRegister(name, email, password) {
         setPreloader(true);
         apiAuth.registration({ name, email, password })
             .then((res) => {
-                if (res) {
+                if (res !== 400) {
+                    handleTokenCheck();
+                    localStorage.setItem('logInJwt', JSON.stringify(true));
                     handleLogin(email, password);
                     setCurrentUser(res);
-                    //localStorage.setItem('jwt', res.token);
-                    //handleTokenCheck();
-                   //navigate('/movies');
+                    navigate('/movies');
                     setPreloader(false);
                 }
             }).catch(err => {
@@ -70,17 +73,18 @@ function App() {
     function handleLogin(email, password) {
         setPreloader(true);
         apiAuth.login({ email, password })
-            .then((res) =>{
-                if(res) {
-                    setLogIn(true);
-                    localStorage.setItem('jwt', res.token);
+            .then((res) => {
+                if(res !== 400) {
                     handleTokenCheck();
+                    localStorage.setItem('logInJwt', JSON.stringify(true));
+                    setLogIn(true);
                     navigate('/movies');
                     setPreloader(false);
                 }
             }).catch(err => {
                 if (err === 'Ошибка: 401') {
                     setErrorMessage(WRONG_PASS);
+                    handleLogout();
                 } else {
                     setErrorMessage(WRONG_TOKEN);
                 }
@@ -94,13 +98,11 @@ function App() {
     function handleLogout() {
         setPreloader(true);
         apiAuth.logout().then((res) => {
-            if(res) {
-                localStorage.removeItem('jwt', res.token);
+            if(res !== 400) {
                 localStorage.clear();
-                setErrorMessage('');
                 setLogIn(false);
-                navigate('/');
                 setPreloader(false);
+                navigate('/');
             }
         }).catch(err => {
             setPreloader(false);
@@ -111,18 +113,19 @@ function App() {
 
     // checking token
     const handleTokenCheck = useCallback(() => {
-        const jwt = localStorage.getItem('jwt');
-            if(jwt) {
-                apiAuth.token(jwt)
-                .then(res => {
-                    if(res) {
+        const logInJwt = JSON.parse(localStorage.getItem('logInJwt'));
+            if(logInJwt) {
+                apiAuth.token()
+                .then((res) => {
+                    if (res) {
+                        localStorage.setItem('logInJwt', JSON.stringify(true));
                         setCurrentUser(res);
                         setLogIn(true);
                     }
                 }).catch(err =>
                     console.log(err));
             }
-    }, [logIn]);
+    }, []);
     //end
 
     // useEffect
@@ -131,8 +134,11 @@ function App() {
     }, [setErrorMessage]);
 
     useEffect(() => {
-        handleTokenCheck();
-    }, [handleTokenCheck]);
+        logInJwt = JSON.parse(localStorage.getItem('logInJwt'));
+        if (logInJwt) {
+            handleTokenCheck();
+        }
+    }, [handleTokenCheck, logInJwt]);
 
     useEffect(() => {
         if (logIn) {
@@ -140,10 +146,10 @@ function App() {
             Promise.all([MainApi.getUserId(), MainApi.getMoviesById()])
                 .then(([userData, moviesData]) => {
                     setCurrentUser(userData);
-                    setSavedMovies(moviesData.filter((i) => i.owner === userData._id));
-                    localStorage.setItem('newMovies', JSON.stringify(moviesData.filter((i) => i.owner === userData._id)));
                     getMoviesApi(moviesData);
                     localStorage.getItem('moviesData', JSON.stringify(moviesData));
+                    setSavedMovies(moviesData.filter((i) => i.owner === userData._id));
+                    localStorage.setItem('savedMovies', JSON.stringify(moviesData.filter((i) => i.owner === userData._id)));
                 }).catch(err => {
                     setPreloader(false);
                     console.log(err);
@@ -157,6 +163,7 @@ function App() {
         setPreloader(true);
         MainApi.changeUserInformation({ name, email }).then((res) => {
             setCurrentUser(res);
+            setErrorMessage('Ваши данные успешно изменены');
             handleTokenCheck();
             setPreloader(false);
         }).catch(err => {
@@ -177,30 +184,32 @@ function App() {
     }
     //end
 
-    // functionality -- getting movies from MoviesApi
+     // functionality -- getting movies from MoviesApi
     function getMoviesApi() {
         setPreloader(true);
-        MoviesApi().then((moviesItems) => {
-            setMoviesItems(moviesItems);
-            localStorage.setItem('movies', JSON.stringify(moviesItems));
-            setPreloader(false);
-        }).catch(err => {
-            setPreloader(false);
-            console.log(err);
-        });
+        if ((localStorage.getItem('movies') ? false : true)) {
+            MoviesApi().then((moviesItems) => {
+                setMoviesItems(moviesItems);
+                localStorage.setItem('movies', JSON.stringify(moviesItems));
+                setPreloader(false);
+            }).catch(err => {
+                setPreloader(false);
+                console.log(err);
+            });
+        }
+        setPreloader(false);
     }
     //end
 
     // functionality -- add movie
     function handleMovieSave(movie) {
-        setPreloader(true);
+        handleTokenCheck();
+        const savedMovie = savedMovies.find((i) => i.movieId === movie.id);
+        savedMovie ? handleDeleteMovie(savedMovie._id) :
         MainApi.createMovie(movie).then((movie) => {
-            setSavedMovies((savedMovies) => [ ...savedMovies, movie].reverse());
-            localStorage.setItem('newMovies', JSON.stringify([ ...savedMovies, movie].reverse()));
-            handleTokenCheck();
-            setPreloader(false);
+            setSavedMovies((savedMovies) => [...savedMovies, movie].reverse());
+            localStorage.setItem('savedMovies', JSON.stringify([...savedMovies, movie].reverse()));
         }).catch(err => {
-            setPreloader(false);
             console.log(err);
         });
     }
@@ -208,19 +217,20 @@ function App() {
 
     // functionality -- delete movie
     function handleDeleteMovie(movieId) {
-        setPreloader(true);
         handleTokenCheck();
         MainApi.deleteMovie(movieId).then(() => {
             const updatedMovies = savedMovies.filter((i) => i._id !== movieId);
             setSavedMovies(updatedMovies);
-            localStorage.setItem('newMovies', JSON.stringify(updatedMovies));
-            setPreloader(false);
+            localStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
         }).catch(err => {
-            setPreloader(false);
             console.log(err);
         });
     }
     //end
+
+    const isSave = (movie) => {
+        return savedMovies.some(i => i.movieId === movie.movieId) ? true : false;
+    };
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
@@ -229,21 +239,19 @@ function App() {
                 <Routes>
                     <Route 
                         path='/signin'
-                        element={
-                            <Login 
-                                logIn={logIn}
+                        element={ logIn ? ( <Navigate to ='/movies' replace /> ) :
+                            (<Login 
                                 onLogin={handleLogin}
                                 errorMessage={errorMessage}
-                            />} 
+                            />)} 
                     />
                     <Route 
                         path='/signup'
-                        element={
-                            <Register 
-                                logIn={logIn}
+                        element={ logIn ? ( <Navigate to ='/movies' replace /> ) :
+                            (<Register 
                                 onRegister={handleRegister}
                                 errorMessage={errorMessage}
-                            />} 
+                            />)} 
                     />
                     <Route 
                         path='/profile'
@@ -263,7 +271,6 @@ function App() {
                         element=
                         {<ProtectedRoute path='/movies' logIn={logIn}>
                             <Movies
-                                logIn={logIn}
                                 handleBurgerMenu={handleBurgerMenu}
                                 isPreloader={isPreloader}
                                 moviesItems={moviesItems}
@@ -271,6 +278,7 @@ function App() {
                                 onMovieSave={handleMovieSave}
                                 savedMovies={savedMovies}
                                 moviesLocation={moviesLocation}
+                                isSave={isSave}
                             />
                         </ProtectedRoute>} 
                     />
@@ -279,18 +287,18 @@ function App() {
                         element=
                         {<ProtectedRoute path='/saved-movies' logIn={logIn}>
                             <SavedMovies
-                                logIn={logIn}
                                 handleBurgerMenu={handleBurgerMenu}
                                 isPreloader={isPreloader}
                                 onDeleteMovie={handleDeleteMovie}
                                 savedMovies={savedMovies}
                                 savedMoviesLocation={savedMoviesLocation}
+                                isSave={isSave}
                             />
                         </ProtectedRoute>} 
                     />
                     <Route 
                         path='/' 
-                        element={
+                        element={ 
                             <Main 
                                 logIn={logIn}
                                 handleBurgerMenu={handleBurgerMenu}

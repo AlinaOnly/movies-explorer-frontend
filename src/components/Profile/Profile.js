@@ -84,7 +84,10 @@ function Profile({ handleBurgerMenu, onUpdateProfile, onLogOut, errorMessage }) 
                     ? (<button 
                             disabled={!isValid}
                             onClick={handleSubmit}
-                            className={`app__text-opacity ${isValid ? "profile__button-save" : "profile__button-save_disable"}`}
+                            className={
+                                `app__text-opacity 
+                                ${isValid && (currentUser.name !== values.name || currentUser.email !== values.email)
+                                ? "profile__button-save" : "profile__button-save_disable"}`}
                             type="submit"
                             aria-label="Сохранить"
                         >

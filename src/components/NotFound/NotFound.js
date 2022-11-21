@@ -8,7 +8,7 @@ function NotFound () {
             <div className="not-found__container">
                 <h1 className="not-found__title">404</h1>
                 <p className="not-found__subtitle">Страница не найдена</p>
-                <Link to="/" className="not-found__button app__text-opacity">Назад</Link>
+                <Link to="/movies" className="not-found__button app__text-opacity">Назад</Link>
             </div>
         </section>
     );

@@ -1,6 +1,11 @@
 import React, { useState, useEffect }  from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import { LAPTOP, PLANE_TABLE, MOBILE } from '../../utils/consts';
+import { LAPTOP,
+        PLANE_TABLE,
+        MOBILE,
+        SHOW_MOVIE_LAPTOP,
+        SHOW_MOVIE_PLANE_TABLE,
+        SHOW_MOVIE_MOBILE } from '../../utils/consts';
 import { NOTMOVIE_ERR } from '../../utils/errors';
 import More from '../More/More';
 import './MoviesCardList.css';
@@ -13,22 +18,23 @@ function MovieCardList({
     moviesFound,
     moviesItems,
     savedMoviesLocation,
-    moviesLocation
+    moviesLocation,
+    isSave
     }) {
 
     const [isSize, setSize] = useState(window.innerWidth);
-    const [moviesRow, setMoviesRow] = useState({ total: 12, plus: 3 });
+    const [moviesRow, setMoviesRow] = useState(SHOW_MOVIE_LAPTOP);
     const [moreButton, setMoreButton] = useState(false);
 
     function handleSizeWindow() {
         if (LAPTOP <= isSize) {
-            setMoviesRow({ total: 12, plus: 3 });
+            setMoviesRow(SHOW_MOVIE_LAPTOP);
         }
         else if (PLANE_TABLE <= isSize) {
-            setMoviesRow({ total: 8, plus: 2 });
+            setMoviesRow(SHOW_MOVIE_PLANE_TABLE);
         }
         else if (MOBILE <= isSize) {
-            setMoviesRow({ total: 5, plus: 2 });
+            setMoviesRow(SHOW_MOVIE_MOBILE);
         }
     }
 
@@ -78,6 +84,7 @@ function MovieCardList({
                             moviesItems={moviesItems}
                             moviesLocation={moviesLocation}
                             savedMoviesLocation={savedMoviesLocation}
+                            isSave={isSave}
                         />
                 )))
             }

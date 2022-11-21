@@ -1,12 +1,10 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ logIn, children }) => {
-    if (logIn === false) {
-        return false;
-    }
+const ProtectedRoute = (props) => {
+    const logInJwt = JSON.parse(localStorage.getItem('logInJwt'));
 
-    return logIn ? children : <Navigate to='/' />
-}
+    return logInJwt ? props.children : <Navigate to='/'/>
+};
 
 export default ProtectedRoute;

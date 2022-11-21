@@ -27,12 +27,11 @@ const login = ({ email, password }) => {
     }).then(error);
 };
 
-const token = (token) => {
+const token = () => {
     return fetch(`${urlDB}/users/me`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            Authorization : `Bearer ${token}`,
         },
         credentials: 'include',
     }).then(error);
