@@ -43,11 +43,11 @@ function SearchForm({ handleSearchButton, moviesLocation }) {
         if (shortMovie) {
             setShortMovie(false);
             handleSearchButton(searchReq, false);
-            localStorage.setItem('shortMovie', shortMovie);
+            localStorage.setItem('shortMovie', false);
         } else {
             setShortMovie(true);
             handleSearchButton(searchReq, true);
-            localStorage.setItem('shortMovie', shortMovie);
+            localStorage.setItem('shortMovie', true);
         }
     }
 
