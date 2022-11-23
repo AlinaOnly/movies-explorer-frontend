@@ -1,27 +1,28 @@
-.movies__card {
+.movie {
     box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
     background-color: #FDFDFD;
     position: relative;
+    height: 271px;
 }
 
-.movies__title {
+.movie__title {
     font-weight: 500;
     font-size: 15px;
     line-height: 18px;
-    padding: 14px 0 9px 14px;
     margin: 0;
+    max-width: 78%;
 }
 
-.movies__duration {
+.movie__duration {
     font-weight: 400;
     font-size: 11px;
     line-height: 13px;
     color: #A0A0A0;
     margin: 0;
-    padding: 0 0 14px 14px;
+    padding-top: 9px;
 }
 
-.movies__save-button {
+.movie__save-button {
     width: 30px;
     height: 30px;
     background-image: url(../../images/save-inactive.svg);
@@ -32,11 +33,11 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    top: 19px;
+    top: 10px;
     right: 14px;
 }
 
-.movies__save-button_active {
+.movie__save-button_active {
     width: 30px;
     height: 30px;
     background-image: url(../../images/save-active.svg);
@@ -47,11 +48,11 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    top: 19px;
+    top: 10px;
     right: 14px;
 }
 
-.movies__delete-button {
+.movie__delete-button {
     width: 30px;
     height: 30px;
     background-image: url(../../images/delete.svg);
@@ -62,14 +63,18 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    top: 19px;
+    top: 10px;
     right: 14px;
 }
 
-.movies__poster {
+.movie__image {
+    object-fit: cover;
     width: 100%;
-    object-fit: contain;
+    height: 203px;
+    display: block;
 }
 
-
-
+.movie__description { 
+    margin: 14px auto 14px 14px;
+    height: 54px;
+}

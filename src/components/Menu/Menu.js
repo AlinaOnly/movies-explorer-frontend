@@ -4,7 +4,7 @@ import Navigation from '../Navigation/Navigation';
 import logo from '../../images/logo.svg';
 import './Menu.css';
 
-function Menu({isBurger, handleBurgerMenu}) {
+function Menu({ handleBurgerMenu }) {
     return (
         <section className="menu">
             <Link to="/">

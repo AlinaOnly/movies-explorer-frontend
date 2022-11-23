@@ -1,43 +1,86 @@
-import {React, useState} from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { durationTime } from '../../utils/duration';
+import { apiUrl } from '../../utils/consts';
 import './MoviesCard.css';
 
-function MoviesCard({ movie }) {
-    const location = useLocation();
-    const isSavedMovies = location.pathname === '/saved-movies';
-    const [isSaveButton, setSaveButton] = useState(false);
+function MoviesCard({
+    movie,
+    savedMovies,
+    onMovieSave,
+    onDeleteMovie,
+    savedMoviesLocation,
+    moviesLocation,
+}) {
 
-    function toggleChangeMoviesButton() {
-        setSaveButton(!isSaveButton);
+    const [deleteButtonHidden, setButtonHidden] = useState(true);
+    const isDelete = savedMovies.filter((i) => i.movieId === movie.id);
+    const [isSaveMovies, setSaveMovies] = useState(false);
+    const checkIfSaved = savedMovies.some((i) => i.movieId === movie.id);
+
+    const movieSaveClass = (`app__button-opacity  ${isSaveMovies ? "movie__save-button_active" : "movie__save-button"}`);
+
+    useEffect(() => {
+        if (moviesLocation) {
+            setSaveMovies(checkIfSaved);
+        } 
+    }, [savedMovies, movie]);
+
+    function handleSave() {
+        onMovieSave(movie);
+        setSaveMovies(true);
     }
 
-    const movieSaveButton = (
-        `${isSaveButton ? "movies__save-button_active"
-        : isSavedMovies ? "movies__delete-button" : "movies__save-button"}`
-    );
+    function handleDelete() {
+        onDeleteMovie(movie._id);
+        setSaveMovies(false);
+    }
+
+    function showDeleteButton() {
+        setButtonHidden(false);
+    }
+
+    function hideDeleteButton() {
+        setButtonHidden(true);
+    }
 
     return (
-        <li className="movies__card">
-            <div className="movies__description">
-                <h3 className="movies__title">{movie.name}</h3>
-                <p className="movies__duration">{movie.duration}</p>
+        <li className="movie"
+            onMouseOver={showDeleteButton}
+            onMouseOut={hideDeleteButton}
+        >
+            <div className="movie__description">
+                <h3 className="movie__title">{movie.nameRU}</h3>
+                <p className="movie__duration">{durationTime(movie.duration)}</p>
             </div>
-            { isSavedMovies
+            { savedMoviesLocation
                 ? (<button
-                    className={movieSaveButton}
+                    hidden={deleteButtonHidden}
+                    className={isDelete ? "app__button-opacity movie__delete-button" : ""}
                     type="button"
                     aria-label="Удалить"
-                >
+                    onClick={handleDelete}
+                    >
                 </button>)
-                : (<button
-                    onClick={toggleChangeMoviesButton}
-                    className={movieSaveButton}
+                : (
+                    <button
+                    className={movieSaveClass}
                     type="button"
                     aria-label="Сохранить"
-                >
+                    onClick={handleSave}
+                    >
                 </button>)
             } 
-            <img className="movies__poster" src={movie.poster} alt={movie.name} />
+            <a 
+                className="app__button-opacity"
+                target="_blank" 
+                rel="noreferrer noopener" 
+                href={movie.trailerLink}>
+                    <img 
+                        className="movie__image" 
+                        src={movie.image.url ?`${apiUrl}${movie.image.url}` : movie.image} 
+                        alt={movie.nameRU} 
+                    />
+            </a>
         </li>
     );
 }
