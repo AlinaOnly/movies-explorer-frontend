@@ -17,7 +17,7 @@
 * Ссылка для проверки level-3: https://github.com/AlinaOnly/movies-explorer-frontend/pull/2
 
 
-
+##
 
 1. Запуск сервера - npm start
 2. Клонирование репозитория - https://github.com/AlinaOnly/movies-explorer-frontend.git
