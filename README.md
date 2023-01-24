@@ -1,4 +1,4 @@
-# movies-explorer-frontend
+# Movies-Explorer-Frontend
 
 ## Movies Frontend -  последняя часть дипломного проекта на курсе по Веб-Разработке от Яндекс.Практикума.
 
@@ -15,6 +15,8 @@
 * Макет для проверки дипломного проекта: https://disk.yandex.ru/d/mYy8fyhX2XS5-g.
 
 * Ссылка для проверки level-3: https://github.com/AlinaOnly/movies-explorer-frontend/pull/2
+
+
 
 
 1. Запуск сервера - npm start
